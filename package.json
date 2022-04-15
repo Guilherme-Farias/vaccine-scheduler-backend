@@ -4,5 +4,9 @@
   "main": "index.js",
   "repository": "git@github.com:Guilherme-Farias/vaccine-scheduler-backend.git",
   "author": "Guilherme Farias <guicfarias11@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1"
+  }
 }

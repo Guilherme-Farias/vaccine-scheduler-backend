@@ -2,7 +2,7 @@
 import { IHttpResponse, IParamErrors } from '../protocols';
 
 type ErrorProps = {
-  errorMsg?: string;
+  errorMsg: string;
 };
 
 export const created = (data: any): IHttpResponse => ({
@@ -13,10 +13,11 @@ export const created = (data: any): IHttpResponse => ({
 type BadRequestProps = {
   params?: IParamErrors;
 } & ErrorProps;
-export const badRequest = ({
-  errorMsg = 'Bad Request',
-  params,
-}: BadRequestProps): IHttpResponse => ({
+export const badRequest = (
+  { errorMsg, params }: BadRequestProps = {
+    errorMsg: 'Bad Request',
+  },
+): IHttpResponse => ({
   statusCode: 400,
   body: {
     error: errorMsg,
@@ -25,17 +26,21 @@ export const badRequest = ({
 });
 
 type ForbiddenProps = ErrorProps;
-export const forbidden = ({
-  errorMsg = 'Forbidden',
-}: ForbiddenProps): IHttpResponse => ({
+export const forbidden = (
+  { errorMsg }: ForbiddenProps = {
+    errorMsg: 'Forbidden',
+  },
+): IHttpResponse => ({
   statusCode: 403,
   body: { error: errorMsg },
 });
 
 type ServerErrorProps = ErrorProps;
-export const serverError = ({
-  errorMsg = 'Erro no servidor',
-}: ServerErrorProps): IHttpResponse => ({
+export const serverError = (
+  { errorMsg }: ServerErrorProps = {
+    errorMsg: 'Internal Server Error',
+  },
+): IHttpResponse => ({
   statusCode: 500,
   body: { error: errorMsg },
 });

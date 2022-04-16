@@ -6,8 +6,8 @@ import { badRequest, created, forbidden, serverError } from '@/shared/helpers';
 
 export interface ICreateAppointmentControllerRequest {
   name: string;
-  birth_date: Date;
-  appointment_date: Date;
+  birth_date: string;
+  appointment_date: string;
 }
 
 export class CreateAppointmentController implements IController {
@@ -31,8 +31,12 @@ export class CreateAppointmentController implements IController {
         return badRequest({ errorMsg: 'Campos inválidos', params: errors });
       }
 
-      const startDay = this.dateProvider.startOfDay(appointment_date);
-      const endDay = this.dateProvider.endOfDay(appointment_date);
+      const birth_date_parsed = this.dateProvider.parseISO(birth_date);
+      const appointment_date_parsed =
+        this.dateProvider.parseISO(appointment_date);
+
+      const startDay = this.dateProvider.startOfDay(appointment_date_parsed);
+      const endDay = this.dateProvider.endOfDay(appointment_date_parsed);
 
       const appointmentsInDay =
         await this.appointmentRepository.findByDateInterval(startDay, endDay);
@@ -41,9 +45,12 @@ export class CreateAppointmentController implements IController {
         return forbidden({ errorMsg: 'O dia está cheio' });
       }
 
-      const appointmentStartHour =
-        this.dateProvider.startOfHour(appointment_date);
-      const appointmentEndHour = this.dateProvider.endOfHour(appointment_date);
+      const appointmentStartHour = this.dateProvider.startOfHour(
+        appointment_date_parsed,
+      );
+      const appointmentEndHour = this.dateProvider.endOfHour(
+        appointment_date_parsed,
+      );
 
       const appointmentsInSameHour = appointmentsInDay.filter(
         appointmentInDay =>
@@ -59,8 +66,8 @@ export class CreateAppointmentController implements IController {
 
       const appointment = await this.appointmentRepository.create({
         name,
-        birth_date,
-        appointment_date,
+        birth_date: birth_date_parsed,
+        appointment_date: appointment_date_parsed,
       });
 
       return created(appointment);

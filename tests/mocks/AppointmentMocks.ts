@@ -6,8 +6,8 @@ export const makeCreateAppointmentControllerRequest = (
   overrides?: Partial<ICreateAppointmentControllerRequest>,
 ): ICreateAppointmentControllerRequest => ({
   name: faker.name.findName(),
-  birth_date: faker.date.past(10),
-  appointment_date: faker.date.future(),
+  birth_date: faker.date.past(10).toISOString(),
+  appointment_date: faker.date.future().toISOString(),
   ...overrides,
 });
 

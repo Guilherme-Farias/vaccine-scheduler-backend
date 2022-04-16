@@ -1,4 +1,5 @@
 import {
+  parseISO,
   startOfDay,
   endOfDay,
   startOfHour,
@@ -8,6 +9,9 @@ import {
 import { IDateProvider } from './IDateProvider';
 
 export class DateFnsProvider implements IDateProvider {
+  parseISO(unformattedDate: string): Date {
+    return parseISO(unformattedDate);
+  }
   startOfDay(date: Date): Date {
     return startOfDay(date);
   }

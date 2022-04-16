@@ -45,7 +45,7 @@ describe('JoiCreateAppointmentValidator()', () => {
 
   it('should validate birth_date when a future date is provided', () => {
     const values = makeCreateAppointmentControllerRequest({
-      birth_date: faker.date.future(),
+      birth_date: faker.date.future(10).toISOString(),
     });
 
     const errors = sut.validate({ ...values });
@@ -56,7 +56,7 @@ describe('JoiCreateAppointmentValidator()', () => {
   });
   it('should validate appointment_date when an earlier date is provided', () => {
     const values = makeCreateAppointmentControllerRequest({
-      appointment_date: faker.date.past(),
+      appointment_date: faker.date.past().toISOString(),
     });
 
     const errors = sut.validate({ ...values });

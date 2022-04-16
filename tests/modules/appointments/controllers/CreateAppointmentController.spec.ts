@@ -18,6 +18,8 @@ describe('CreateAppointmentController', () => {
   let createAppointmentValidatorMock: MockProxy<IValidation>;
   let dateProviderMock: MockProxy<IDateProvider>;
   let appointmentRepositoryMock: MockProxy<IAppointmentRepository>;
+  const parsed_birth_date = 'parsed_birth_date' as unknown as Date;
+  const parsed_appointment_date = 'parsed_appointment_date' as unknown as Date;
   const start_of_day = 'start_of_day' as unknown as Date;
   const end_of_day = 'end_of_day' as unknown as Date;
   const start_of_hour = 'start_of_hour' as unknown as Date;
@@ -33,6 +35,9 @@ describe('CreateAppointmentController', () => {
 
   const makeDateProviderMock = () => {
     dateProviderMock = mock<IDateProvider>();
+    dateProviderMock.parseISO
+      .mockReturnValueOnce(parsed_birth_date)
+      .mockReturnValueOnce(parsed_appointment_date);
     dateProviderMock.startOfDay.mockReturnValue(start_of_day);
     dateProviderMock.endOfDay.mockReturnValue(end_of_day);
     dateProviderMock.startOfHour.mockReturnValue(start_of_hour);
@@ -50,8 +55,8 @@ describe('CreateAppointmentController', () => {
       Promise.resolve({
         id: 'valid_id',
         name: httpRequest.name,
-        birth_date: httpRequest.birth_date,
-        appointment_date: httpRequest.appointment_date,
+        birth_date: parsed_birth_date,
+        appointment_date: parsed_appointment_date,
         vaccinated: false,
       }),
     );
@@ -86,8 +91,8 @@ describe('CreateAppointmentController', () => {
 
     const httpResponse = await sut.handle({
       name: 'invalid_name',
-      birth_date: 'invalid_date' as unknown as Date,
-      appointment_date: 'invalid_date' as unknown as Date,
+      birth_date: 'invalid_date',
+      appointment_date: 'invalid_date',
     });
 
     expect(httpResponse).toEqual(
@@ -103,11 +108,35 @@ describe('CreateAppointmentController', () => {
     expect(httpResponse).toEqual(serverError({ errorMsg: 'Erro no servidor' }));
   });
 
+  it('should call IDateProvider.parseISO with correct value', async () => {
+    await sut.handle(httpRequest);
+
+    expect(dateProviderMock.parseISO).nthCalledWith(1, httpRequest.birth_date);
+    expect(dateProviderMock.parseISO).nthReturnedWith(1, parsed_birth_date);
+
+    expect(dateProviderMock.parseISO).nthCalledWith(
+      2,
+      httpRequest.appointment_date,
+    );
+    expect(dateProviderMock.parseISO).nthReturnedWith(
+      2,
+      parsed_appointment_date,
+    );
+  });
+
+  it('should return 500 if IDateProvider.parseISO throws', async () => {
+    dateProviderMock.parseISO.mockImplementationOnce(throwError);
+
+    await sut.handle(httpRequest);
+
+    expect(dateProviderMock.parseISO).toThrow();
+  });
+
   it('should call IDateProvider.startOfDay with correct value', async () => {
     await sut.handle(httpRequest);
 
     expect(dateProviderMock.startOfDay).toHaveBeenCalledWith(
-      httpRequest.appointment_date,
+      parsed_appointment_date,
     );
 
     expect(dateProviderMock.startOfDay).toReturnWith(start_of_day);
@@ -125,7 +154,7 @@ describe('CreateAppointmentController', () => {
     await sut.handle(httpRequest);
 
     expect(dateProviderMock.endOfDay).toHaveBeenCalledWith(
-      httpRequest.appointment_date,
+      parsed_appointment_date,
     );
 
     expect(dateProviderMock.endOfDay).toReturnWith(end_of_day);
@@ -172,7 +201,7 @@ describe('CreateAppointmentController', () => {
     await sut.handle(httpRequest);
 
     expect(dateProviderMock.startOfHour).toHaveBeenCalledWith(
-      httpRequest.appointment_date,
+      parsed_appointment_date,
     );
 
     expect(dateProviderMock.startOfHour).toReturnWith(start_of_hour);
@@ -190,7 +219,7 @@ describe('CreateAppointmentController', () => {
     await sut.handle(httpRequest);
 
     expect(dateProviderMock.endOfHour).toHaveBeenCalledWith(
-      httpRequest.appointment_date,
+      parsed_appointment_date,
     );
 
     expect(dateProviderMock.endOfHour).toReturnWith(end_of_hour);
@@ -251,8 +280,8 @@ describe('CreateAppointmentController', () => {
 
     expect(appointmentRepositoryMock.create).toHaveBeenCalledWith({
       name: httpRequest.name,
-      birth_date: httpRequest.birth_date,
-      appointment_date: httpRequest.appointment_date,
+      birth_date: parsed_birth_date,
+      appointment_date: parsed_appointment_date,
     });
   });
 
@@ -271,8 +300,8 @@ describe('CreateAppointmentController', () => {
       created({
         id: 'valid_id',
         name: httpRequest.name,
-        birth_date: httpRequest.birth_date,
-        appointment_date: httpRequest.appointment_date,
+        birth_date: parsed_birth_date,
+        appointment_date: parsed_appointment_date,
         vaccinated: false,
       }),
     );

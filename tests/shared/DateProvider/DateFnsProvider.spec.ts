@@ -6,6 +6,9 @@ import { faker } from '@faker-js/faker';
 import { DateFnsProvider } from '@/shared/providers/DateProvider';
 
 jest.mock('date-fns', () => ({
+  parseISO(): Date {
+    return 'parse_iso' as unknown as Date;
+  },
   startOfDay(): Date {
     return 'start_of_day' as unknown as Date;
   },
@@ -29,6 +32,25 @@ describe('DateFnsProvider', () => {
 
   beforeEach(() => {
     sut = new DateFnsProvider();
+  });
+
+  describe('parseISO()', () => {
+    it('should call parseISO with correct values', () => {
+      const parseISOSpy = jest.spyOn(dateFns, 'parseISO');
+      sut.parseISO(date.toISOString());
+      expect(parseISOSpy).toHaveBeenCalledWith(date.toISOString());
+    });
+
+    it('should return a parsed date on success', async () => {
+      const parseISO = sut.parseISO(date.toISOString());
+      expect(parseISO).toBe('parse_iso');
+    });
+
+    it('should throw if parseISO throws', async () => {
+      jest.spyOn(dateFns, 'parseISO').mockImplementationOnce(throwError);
+
+      expect(() => sut.parseISO(date.toISOString())).toThrow();
+    });
   });
 
   describe('startOfDay()', () => {

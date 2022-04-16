@@ -1,3 +1,7 @@
+import { config } from 'dotenv';
+
+config({ path: '.env.test' });
+
 export default {
   roots: ['<rootDir>/src', '<rootDir>/tests'],
   clearMocks: true,

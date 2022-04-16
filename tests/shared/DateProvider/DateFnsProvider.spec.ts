@@ -76,7 +76,7 @@ describe('DateFnsProvider', () => {
       expect(startOfHourSpy).toHaveBeenCalledWith(date);
     });
 
-    it('should return a end of day on success', async () => {
+    it('should return a start of hour on success', async () => {
       const startOfHour = sut.startOfHour(date);
       expect(startOfHour).toBe('start_of_hour');
     });
@@ -95,7 +95,7 @@ describe('DateFnsProvider', () => {
       expect(endOfHourSpy).toHaveBeenCalledWith(date);
     });
 
-    it('should return a end of day on success', async () => {
+    it('should return a end of hour on success', async () => {
       const endOfHour = sut.endOfHour(date);
       expect(endOfHour).toBe('end_of_hour');
     });
@@ -122,7 +122,7 @@ describe('DateFnsProvider', () => {
       });
     });
 
-    it('should return a end of day on success', async () => {
+    it('should return true if the provided date is within the success range', async () => {
       const isWithinInterval = sut.isWithinInterval(date, {
         start: start_date,
         end: end_date,

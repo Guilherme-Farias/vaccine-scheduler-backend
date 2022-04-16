@@ -43,7 +43,7 @@ describe('JoiCreateAppointmentValidator()', () => {
     });
   });
 
-  it('should validate birth_date when future date is provided', () => {
+  it('should validate birth_date when a future date is provided', () => {
     const values = makeCreateAppointmentControllerRequest({
       birth_date: faker.date.future(),
     });
@@ -54,7 +54,7 @@ describe('JoiCreateAppointmentValidator()', () => {
       birth_date: 'A data de nascimento deve ser menor do que o dia atual',
     });
   });
-  it('should validate appointment_date when past date is provided', () => {
+  it('should validate appointment_date when an earlier date is provided', () => {
     const values = makeCreateAppointmentControllerRequest({
       appointment_date: faker.date.past(),
     });

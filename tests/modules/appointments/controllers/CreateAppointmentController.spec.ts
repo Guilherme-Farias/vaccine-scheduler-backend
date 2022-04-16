@@ -113,7 +113,7 @@ describe('CreateAppointmentController', () => {
     expect(dateProviderMock.startOfDay).toReturnWith(start_of_day);
   });
 
-  it('should return 500 if IDateProvider.getDateWithoutHours throws', async () => {
+  it('should return 500 if IDateProvider.startOfDay throws', async () => {
     dateProviderMock.startOfDay.mockImplementationOnce(throwError);
 
     const httpResponse = await sut.handle(httpRequest);
@@ -158,7 +158,7 @@ describe('CreateAppointmentController', () => {
     expect(httpResponse).toEqual(serverError({ errorMsg: 'Erro no servidor' }));
   });
 
-  it('should return 403 if provided date have greater than or equal to 20 appointments', async () => {
+  it('should return 403 if the given date has a appointments number greater than or equal to 20', async () => {
     appointmentRepositoryMock.findByDateInterval.mockReturnValueOnce(
       Promise.resolve([...Array(20).keys()] as unknown as IAppointment[]),
     );
@@ -233,7 +233,7 @@ describe('CreateAppointmentController', () => {
     expect(httpResponse).toEqual(serverError({ errorMsg: 'Erro no servidor' }));
   });
 
-  it('should return 403 if provided date have greater than or equal to 2 appointments in same hour', async () => {
+  it('should return 403 if the given time has a number of appointments greater than or equal to 2', async () => {
     appointmentRepositoryMock.findByDateInterval.mockReturnValueOnce(
       Promise.resolve([...Array(2).keys()] as unknown as IAppointment[]),
     );

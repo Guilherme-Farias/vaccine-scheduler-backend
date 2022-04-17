@@ -5,6 +5,12 @@ import { IAddAppointmentDTO } from '../dtos';
 import { IAppointmentRepository } from './IAppointmentRepository';
 
 export class PrismaAppointmentRepository implements IAppointmentRepository {
+  async list(): Promise<IAppointment[]> {
+    const appointments = await prisma.appointment.findMany({});
+
+    return appointments;
+  }
+
   async create(data: IAddAppointmentDTO): Promise<IAppointment> {
     const appointment = await prisma.appointment.create({ data });
 

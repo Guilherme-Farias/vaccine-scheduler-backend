@@ -17,6 +17,23 @@ describe('PrismaAppointmentRepository', () => {
     sut = new PrismaAppointmentRepository();
   });
 
+  describe('list()', () => {
+    it('should be able to list appointments', async () => {
+      const appointment = makeIncompleteAppointment();
+      const createdAppointment = await sut.create(appointment);
+
+      const response = await sut.list();
+
+      expect(response.length).toBe(1);
+      expect(response[0]).toEqual(createdAppointment);
+    });
+    it('should be able to return an empty appointment list', async () => {
+      const response = await sut.list();
+
+      expect(response.length).toBe(0);
+    });
+  });
+
   describe('create()', () => {
     it('should be able to create a new appointment', async () => {
       const appointment = makeIncompleteAppointment();

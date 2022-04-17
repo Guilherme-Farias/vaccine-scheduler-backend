@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { setHours } from 'date-fns';
+
 import { ICreateAppointmentControllerRequest } from '@/modules/appointments/controllers';
 import { IAddAppointmentDTO } from '@/modules/appointments/dtos';
+import { IAppointment } from '@/modules/appointments/models';
 
 export const makeCreateAppointmentControllerRequest = (
   overrides?: Partial<ICreateAppointmentControllerRequest>,
@@ -18,6 +20,17 @@ export const makeIncompleteAppointment = (
   name: faker.name.findName(),
   birth_date: faker.date.past(10),
   appointment_date: faker.date.future(),
+  ...overrides,
+});
+
+export const makeAppointment = (
+  overrides?: Partial<IAppointment>,
+): IAppointment => ({
+  id: faker.datatype.uuid(),
+  name: faker.name.findName(),
+  birth_date: faker.date.past(10),
+  appointment_date: faker.date.future(),
+  vaccinated: false,
   ...overrides,
 });
 

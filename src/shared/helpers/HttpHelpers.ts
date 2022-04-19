@@ -5,9 +5,19 @@ type ErrorProps = {
   errorMsg: string;
 };
 
+export const ok = (data: any): IHttpResponse => ({
+  statusCode: 200,
+  body: data,
+});
+
 export const created = (data: any): IHttpResponse => ({
   statusCode: 201,
   body: data,
+});
+
+export const noContent = (): IHttpResponse => ({
+  statusCode: 204,
+  body: null,
 });
 
 type BadRequestProps = {

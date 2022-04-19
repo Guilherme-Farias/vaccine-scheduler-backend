@@ -1,4 +1,3 @@
-/* eslint-disable no-promise-executor-return */
 import { mock, MockProxy } from 'jest-mock-extended';
 import {
   makeCreateAppointmentControllerRequest,

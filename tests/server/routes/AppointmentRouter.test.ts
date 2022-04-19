@@ -10,6 +10,7 @@ import { setupApp } from '@/server/config/app';
 import {
   makeCreateAppointmentControllerRequest,
   makeCreateAppointmentControllerRequestList,
+  makeUpdateAppointmentControllerRequest,
 } from '@/tests/mocks';
 
 describe('AppointmentRouter', () => {
@@ -108,6 +109,50 @@ describe('AppointmentRouter', () => {
       );
 
       await request(app).post(path).send(httpRequest).expect(403);
+    });
+  });
+
+  describe('PUT /appointments/:id', () => {
+    it('should return 200 on update appointment', async () => {
+      const { body } = await request(app)
+        .post(path)
+        .send(makeCreateAppointmentControllerRequest())
+        .expect(201);
+
+      const response = await request(app)
+        .put(`${path}/${body.id}`)
+        .send(
+          makeUpdateAppointmentControllerRequest({
+            vaccinated: true,
+          }),
+        )
+        .expect(200);
+
+      expect(response.body.vaccinated).toBe(true);
+    });
+
+    it('should return 404 if not find the appointment', async () => {
+      await request(app)
+        .put(`${path}/invalid_id`)
+        .send(
+          makeUpdateAppointmentControllerRequest({
+            vaccinated: true,
+          }),
+        )
+        .expect(404);
+    });
+
+    it('should return 400 if an invalid data is provided', async () => {
+      const invalidData = {};
+      const { body } = await request(app)
+        .post(path)
+        .send(makeCreateAppointmentControllerRequest())
+        .expect(201);
+
+      await request(app)
+        .put(`${path}/${body.id}`)
+        .send(invalidData)
+        .expect(400);
     });
   });
 });

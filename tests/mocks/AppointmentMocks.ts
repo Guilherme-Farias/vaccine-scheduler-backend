@@ -1,10 +1,14 @@
 import { faker } from '@faker-js/faker';
 import { setHours } from 'date-fns';
 
-import { ICreateAppointmentControllerRequest } from '@/modules/appointments/controllers';
+import {
+  ICreateAppointmentControllerRequest,
+  IUpdateAppointmentControllerRequest,
+} from '@/modules/appointments/controllers';
 import { IAddAppointmentDTO } from '@/modules/appointments/dtos';
 import { IAppointment } from '@/modules/appointments/models';
 
+// Requests
 export const makeCreateAppointmentControllerRequest = (
   overrides?: Partial<ICreateAppointmentControllerRequest>,
 ): ICreateAppointmentControllerRequest => ({
@@ -14,6 +18,18 @@ export const makeCreateAppointmentControllerRequest = (
   ...overrides,
 });
 
+export const makeUpdateAppointmentControllerRequest = (
+  overrides?: Partial<IUpdateAppointmentControllerRequest>,
+): IUpdateAppointmentControllerRequest => ({
+  id: faker.datatype.uuid(),
+  name: faker.name.findName(),
+  birth_date: faker.date.past(10).toISOString(),
+  appointment_date: faker.date.future().toISOString(),
+  vaccinated: false,
+  ...overrides,
+});
+
+// DTOs
 export const makeIncompleteAppointment = (
   overrides?: Partial<IAddAppointmentDTO>,
 ): IAddAppointmentDTO => ({
@@ -34,12 +50,13 @@ export const makeAppointment = (
   ...overrides,
 });
 
+// Helpers
 type MakeDayWithoutAppointmentAvailabilityRequestsProps = {
   quantity?: number;
   overrides?: Partial<ICreateAppointmentControllerRequest>;
 };
 
-// TODO Refacto this method
+// TODO Refactor this method
 export const makeCreateAppointmentControllerRequestList = ({
   quantity = 20,
   overrides,

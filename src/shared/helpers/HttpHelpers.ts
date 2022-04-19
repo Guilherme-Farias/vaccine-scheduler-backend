@@ -45,6 +45,16 @@ export const forbidden = (
   body: { error: errorMsg },
 });
 
+type NotFoundProps = ErrorProps;
+export const notFound = (
+  { errorMsg }: NotFoundProps = {
+    errorMsg: 'NotFound',
+  },
+): IHttpResponse => ({
+  statusCode: 404,
+  body: { error: errorMsg },
+});
+
 type ServerErrorProps = ErrorProps;
 export const serverError = (
   { errorMsg }: ServerErrorProps = {

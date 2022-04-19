@@ -2,7 +2,7 @@
  * @jest-environment ./src/infra/prisma/prisma-test-environment
  */
 
-import { makeIncompleteAppointment } from '@/tests/mocks';
+import { makeAppointment, makeIncompleteAppointment } from '@/tests/mocks';
 import faker from '@faker-js/faker';
 
 import { prisma } from '@/infra/prisma';
@@ -15,6 +15,23 @@ describe('PrismaAppointmentRepository', () => {
   beforeEach(async () => {
     await prisma.appointment.deleteMany({});
     sut = new PrismaAppointmentRepository();
+  });
+
+  describe('findById()', () => {
+    it('should be able to return an appointment by id', async () => {
+      const appointment = makeIncompleteAppointment();
+      const createdAppointment = await sut.create(appointment);
+
+      const response = await sut.findById(createdAppointment.id);
+
+      expect(response).toEqual(createdAppointment);
+    });
+
+    it('should be able to return null when not find appointment', async () => {
+      const response = await sut.findById('any_id');
+
+      expect(response).toBe(null);
+    });
   });
 
   describe('list()', () => {
@@ -42,6 +59,27 @@ describe('PrismaAppointmentRepository', () => {
 
       expect(response).toHaveProperty('id');
       expect(response.vaccinated).toEqual(false);
+    });
+  });
+
+  describe('update()', () => {
+    it('should be able to update an appointment by id', async () => {
+      const appointment = makeIncompleteAppointment();
+      const createdAppointment = await sut.create(appointment);
+
+      const response = await sut.update({
+        ...createdAppointment,
+        vaccinated: true,
+      });
+
+      expect(response).toEqual({ ...createdAppointment, vaccinated: true });
+    });
+
+    it('should be able to throw error when appointment not found', async () => {
+      const appointment = makeAppointment();
+      const response = sut.update({ ...appointment, id: 'invalid_id' });
+
+      expect(response).rejects.toThrow();
     });
   });
 

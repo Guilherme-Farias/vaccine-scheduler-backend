@@ -155,4 +155,23 @@ describe('AppointmentRouter', () => {
         .expect(400);
     });
   });
+
+  describe('PATCH /appointments/:id/vaccine', () => {
+    it('should return 200 on update appointment', async () => {
+      const { body } = await request(app)
+        .post(path)
+        .send(makeCreateAppointmentControllerRequest())
+        .expect(201);
+
+      const response = await request(app)
+        .patch(`${path}/${body.id}/vaccine`)
+        .expect(200);
+
+      expect(response.body.vaccinated).toBe(!body.vaccinated);
+    });
+
+    it('should return 404 if not find the appointment', async () => {
+      await request(app).patch(`${path}/invalid_id/vaccine`).expect(404);
+    });
+  });
 });

@@ -4,6 +4,7 @@ import {
   makeListAppointmentsController,
   makeCreateAppointmentController,
   makeUpdateAppointmentController,
+  makeVaccineAUserController,
 } from '@/server/factories/controllers';
 
 export default (router: Router): void => {
@@ -18,5 +19,9 @@ export default (router: Router): void => {
   router.put(
     '/appointments/:id',
     adaptExpressRoute(makeUpdateAppointmentController()),
+  );
+  router.patch(
+    '/appointments/:id/vaccine',
+    adaptExpressRoute(makeVaccineAUserController()),
   );
 };

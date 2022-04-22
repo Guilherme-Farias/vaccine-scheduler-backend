@@ -3,6 +3,7 @@ import { adaptExpressRoute } from '@/server/adapters';
 import {
   makeListAppointmentsController,
   makeCreateAppointmentController,
+  makeGetAppointmentByIdController,
   makeUpdateAppointmentController,
   makeVaccineAUserController,
 } from '@/server/factories/controllers';
@@ -15,6 +16,10 @@ export default (router: Router): void => {
   router.post(
     '/appointments',
     adaptExpressRoute(makeCreateAppointmentController()),
+  );
+  router.get(
+    '/appointments/:id',
+    adaptExpressRoute(makeGetAppointmentByIdController()),
   );
   router.put(
     '/appointments/:id',

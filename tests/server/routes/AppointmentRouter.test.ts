@@ -112,6 +112,25 @@ describe('AppointmentRouter', () => {
     });
   });
 
+  describe('GET /appointments/:id', () => {
+    it('should return 200 with data on success', async () => {
+      const postResponse = await request(app)
+        .post(path)
+        .send(makeCreateAppointmentControllerRequest())
+        .expect(201);
+
+      const getResponse = await request(app)
+        .get(`${path}/${postResponse.body.id}`)
+        .expect(200);
+
+      expect(getResponse.body).toEqual(postResponse.body);
+    });
+
+    it('should return 404 if not find the appointment', async () => {
+      await request(app).get(`${path}/invalid_id`).expect(404);
+    });
+  });
+
   describe('PUT /appointments/:id', () => {
     it('should return 200 on update appointment', async () => {
       const { body } = await request(app)

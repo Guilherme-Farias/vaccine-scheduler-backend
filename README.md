@@ -43,8 +43,10 @@ Este projeto está sendo desenvolvido com as seguintes tecnologias:
 $ git clone https://github.com/Guilherme-Farias/vaccine-scheduler-backend
 # Ir para o repositório
 $ cd vaccine-scheduler-backend
-# instanciar imagens docker
+# Instanciar imagens docker
 $ docker-compose up -d
+# Rodar as migrações
+$ yarn prisma migrate dev
 # Instalar as dependências
 $ yarn install
 # Rodar a aplicação em ambiente de desenvolvimento

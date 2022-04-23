@@ -55,7 +55,8 @@ describe('JoiUpdateAppointmentValidator()', () => {
     const errors = sut.validate({ ...values });
 
     expect(errors).toMatchObject({
-      birth_date: 'A data de nascimento deve ser menor do que o dia atual',
+      birth_date:
+        'A data de nascimento deve ser menor do que o dia atual e horário atual',
     });
   });
 
@@ -67,7 +68,8 @@ describe('JoiUpdateAppointmentValidator()', () => {
     const errors = sut.validate({ ...values });
 
     expect(errors).toMatchObject({
-      appointment_date: 'A data do agendamento deve maior do que o dia atual',
+      appointment_date:
+        'A data do agendamento deve maior do que o dia atual e horário atual',
     });
   });
 
